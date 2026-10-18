@@ -54,7 +54,7 @@ def test_analysis_verdict_invalid_but_inside_the_tolerance_is_info():
 def test_single_verdict(single):
     kind, text = ev.verdict_single(single, 0.06)
     assert kind == "info" and "Von 23 Einzelfehlern" in text and "bei der Regel „Eltern“ 21 (91 %) harmlos (|Bias| ≤ 0,06)" in text and "„kleinste gültige“ 19" in text and "„Nicht-Nachkommen“ 18" in text
-    assert "„alle anderen“ 0 und „nichts“ 0" in text and "Zusätzliche Pfeile schaden hier nie (12 von 12)" in text and "Eigenschaft dieser Welt" in text
+    assert "„alle anderen“ 0 und „nichts“ 0" in text and "Ein einzelner zusätzlicher Pfeil schadet hier nie (12 von 12)" in text and "Eigenschaft dieser Welt" in text
     assert "„Eltern“ 23 (100 %)" in ev.verdict_single(single, 0.4)[1]
 
 
@@ -74,7 +74,7 @@ def test_detection_verdict(small_detect):
 def test_multi_verdict(small_multi):
     res, rmse = small_multi
     kind, text = ev.verdict_multi(res, rmse, 0.06)
-    assert kind == "info" and "Mit 1 bis 2 zufälligen Fehlern sinkt der Anteil harmloser Diagramme bei „Eltern“ von " in text and "Streuung gegen Bias (n = 200)" in text and "richtig RMSE" in text and "fehlendes Z → X" in text
+    assert kind == "info" and "Mit 1 bis 2 zufälligen Fehlerschritten sinkt der Anteil harmloser Diagramme bei „Eltern“ von " in text and "Streuung gegen Bias (n = 200)" in text and "richtig RMSE" in text and "fehlendes Z → X" in text
 
 
 def test_multi_verdict_names_the_largest_sample_size():

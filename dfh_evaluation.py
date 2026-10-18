@@ -258,7 +258,7 @@ def verdict_single(res: dict, tol: float) -> tuple:
     sm = single_summary(res, tol)
     e, m, nn, al, no = sm["Eltern"], sm["kleinste gültige"], sm["Nicht-Nachkommen"], sm["alle anderen"], sm["nichts"]
     return "info", (f"Von {e['total']} Einzelfehlern (fehlender, umgedrehter oder zusätzlicher Pfeil) sind bei der Regel „Eltern“ {e['harmless']} ({pct(e['share'])}) harmlos (|Bias| ≤ {de(tol)}), bei „kleinste gültige“ {m['harmless']}, bei „Nicht-Nachkommen“ {nn['harmless']}; "
-                    f"„alle anderen“ {al['harmless']} und „nichts“ {no['harmless']}: Diese beiden verzerren schon im richtigen Diagramm. Zusätzliche Pfeile schaden hier nie ({e['by_kind']['zu viel'][0]} von {e['by_kind']['zu viel'][1]}), "
+                    f"„alle anderen“ {al['harmless']} und „nichts“ {no['harmless']}: Diese beiden verzerren schon im richtigen Diagramm. Ein einzelner zusätzlicher Pfeil schadet hier nie ({e['by_kind']['zu viel'][0]} von {e['by_kind']['zu viel'][1]}), "
                     f"das ist eine Eigenschaft dieser Welt (kein Sammelknoten vor dem Faktor).")
 
 
@@ -281,5 +281,5 @@ def verdict_multi(res: dict, rmse: dict, tol: float) -> tuple:
     ks = res["ks"]
     c = rmse["cases"]
     n_hi = max(rmse["ns"])
-    return "info", (f"Mit {ks[0]} bis {ks[-1]} zufälligen Fehlern sinkt der Anteil harmloser Diagramme bei „Eltern“ von {pct(sm[ks[0]]['Eltern'])} auf {pct(sm[ks[-1]]['Eltern'])}, bei „Nicht-Nachkommen“ von {pct(sm[ks[0]]['Nicht-Nachkommen'])} auf {pct(sm[ks[-1]]['Nicht-Nachkommen'])}. "
+    return "info", (f"Mit {ks[0]} bis {ks[-1]} zufälligen Fehlerschritten sinkt der Anteil harmloser Diagramme bei „Eltern“ von {pct(sm[ks[0]]['Eltern'])} auf {pct(sm[ks[-1]]['Eltern'])}, bei „Nicht-Nachkommen“ von {pct(sm[ks[0]]['Nicht-Nachkommen'])} auf {pct(sm[ks[-1]]['Nicht-Nachkommen'])}. "
                     f"Streuung gegen Bias (n = {n_hi}): richtig RMSE {de(c[('richtiges Diagramm', n_hi)]['rmse'], 3)}, fehlendes Z → X {de(c[('fehlt Z → X', n_hi)]['rmse'], 3)}, zusätzliches W → X {de(c[('zu viel W → X', n_hi)]['rmse'], 3)}: ein Fehler kann die Streuung senken.")

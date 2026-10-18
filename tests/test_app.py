@@ -103,7 +103,7 @@ def test_every_experiment_runs_on_click():
     at = _fresh_app()
     assert "exp3_ready" not in at.session_state
     assert any("Von 23 Einzelfehlern" in i.value for i in at.info) and any("Fehlt der Pfeil Nachfrage → Faktor" in i.value for i in at.info)          # Experimente 1 und 2 sind exakt und stehen gleich da
-    for key, text in (("exp3_run", "Alle 284 Diagramme im Abstand 1 bis 2"), ("exp4_run", "zufälligen Fehlern sinkt der Anteil harmloser Diagramme")):
+    for key, text in (("exp3_run", "Alle 284 Diagramme im Abstand 1 bis 2"), ("exp4_run", "zufälligen Fehlerschritten sinkt der Anteil harmloser Diagramme")):
         at.button(key=key).click().run(timeout=TIMEOUT)
         assert not at.exception, (key, [str(e) for e in at.exception])
         assert any(text in i.value for i in at.info), key

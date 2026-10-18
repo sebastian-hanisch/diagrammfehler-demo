@@ -111,7 +111,7 @@ st.markdown(
     """
 **Die ganze Linie hat angenommen, dass das Diagramm stimmt.** Dies ist das sechzehnte Stück der Linie **Kausale Diagramme und Adjustierung**. Fünf Vorgänger haben die Frage ausdrücklich hierher verschoben: Was kostet es, wenn ein **Pfeil fehlt**, **verkehrt herum** zeigt oder **zu viel** gezeichnet ist?
 Gemessen wird der **Bias** der geschätzten Wirkung des Faktors auf den Servicegrad, **exakt** aus der Kovarianz der Welt (kein Zufall), bei fünf Regeln, aus dem gezeichneten Diagramm eine Anpassungsmenge zu bilden.
-Der Befund ist unbequem: Die meisten Fehler sind harmlos, aber **der eine schädliche ist genau der, den die Daten nicht immer zeigen**.
+Der Befund ist unbequem: Bei der Regel Eltern sind die meisten Einzelfehler harmlos; schädlich sind zwei, beide an der Stelle Nachfrage → Faktor. Die Daten verwerfen sie als Einzelfehler fast immer, aber **Diagramme, die zugleich weitere Pfeile umdrehen oder hinzufügen und dadurch nur wahre Unabhängigkeiten behaupten, bleiben unentdeckt**.
 
 Weiter unten: vier Experimente (**🔬**), **🚧 Wo die Annahmen enden** und der Expander **📐 Mathematische Formulierung**.
 """
@@ -123,8 +123,8 @@ with st.expander("So liest man das Ergebnis", expanded=True):
 1. **Die Welt** (links): die der Linie mit sechs Größen: Saison S → Nachfrage Z → Faktor X → Servicegrad Y, dazu Z → Y, Wetter W → Y und die Beschwerden C als Wirkung des Servicegrads. Die wahre Wirkung X → Y ist 0,6.
 2. **Das gezeichnete Diagramm** (rechts) baut man unten Paar für Paar: **grau** richtig, **orange** umgedreht, **rot** zu viel, **grau gestrichelt** fehlend. Blau gefüllte Knoten sind die Größen, an die die gewählte Regel anpasst.
 3. **Fünf Regeln** machen aus dem Diagramm eine Menge: die Eltern des Faktors, alle Nicht-Nachkommen, die kleinste gültige Menge, alle anderen Größen, nichts. Die Balken zeigen den **exakten Bias** je Regel; grün liegt innerhalb der Toleranz (Seitenleiste).
-4. **Gültig heißt zweierlei:** im gezeichneten Diagramm (so wurde die Menge gewählt) und im wahren (so wird sie bezahlt). Nur eine im wahren Diagramm gültige Menge gibt Bias null.
-5. **Die Daten** prüfen die lokalen Markov-Aussagen des gezeichneten Diagramms. Ein Diagramm derselben Markov-Klasse wie das wahre wird nie verworfen, kann aber falsch anpassen.
+4. **Gültig heißt zweierlei:** im gezeichneten Diagramm (so wurde die Menge gewählt) und im wahren (so wird sie bezahlt). In dieser Welt gibt nur eine im wahren Diagramm gültige Menge Bias null.
+5. **Die Daten** prüfen die lokalen Markov-Aussagen des gezeichneten Diagramms. Ein Diagramm derselben Markov-Klasse wie das wahre wird von den Daten nur im Rahmen der Fehlalarmrate verworfen, kann aber falsch anpassen.
         """
     )
 
@@ -193,11 +193,11 @@ verdict(verdict_analysis(a))
 st.markdown("### Die fünf Regeln nebeneinander")
 st.plotly_chart(build_rules_chart(a), width="stretch", key="rules_chart")
 st.dataframe(style_rules_table(build_rules_table(a)), hide_index=True, width="stretch")
-st.caption("Der Bias ist exakt (Bevölkerung), nicht aus der Stichprobe. Schadet ein Pfeil, steht es in der Spalte „gültig im wahren Diagramm“: Nur eine dort gültige Menge gibt Bias null.")
+st.caption("Der Bias ist exakt (Bevölkerung), nicht aus der Stichprobe. Schadet ein Pfeil, steht es in der Spalte „gültig im wahren Diagramm“: In dieser Welt gibt nur eine dort gültige Menge Bias null.")
 
 st.markdown("### 🔍 Was die Daten über das Diagramm sagen")
 verdict(("info", (f"Von {len(a.markov)} lokalen Markov-Aussagen des gezeichneten Diagramms (Fisher-z, Bonferroni, 0,05 gesamt) wird mindestens eine verworfen: {'ja' if a.rejected else 'nein'}. "
-                  f"Das Diagramm hat {a.class_size} Mitglieder in seiner Markov-Klasse; das wahre gehört dazu: {'ja, die Daten können sie nie unterscheiden' if a.same_class else 'nein'}.")))
+                  f"Das Diagramm hat {a.class_size} Mitglieder in seiner Markov-Klasse; das wahre gehört dazu: {'ja, die Unabhängigkeitsaussagen sind dieselben' if a.same_class else 'nein'}.")))
 st.dataframe(build_markov_table(a), hide_index=True, width="stretch")
 st.dataframe(build_differences_table(a), hide_index=True, width="stretch")
 st.dataframe(build_summary_table(a), hide_index=True, width="stretch")
@@ -237,7 +237,7 @@ if experiment_button("▶ Experiment 3 rechnen (etwa 5 Sekunden)", "exp3"):
     st.dataframe(build_detection_table(res3, settings.tol, rule), hide_index=True, width="stretch")
 
 st.subheader("🔬 Experiment 4: Mehrere Fehler und die Streuung")
-st.caption(f"{K.EXP_MULTI_SAMPLES} zufällige Diagramme mit 1 bis 4 Fehlern nacheinander (azyklisch); dazu die Streuung der Schätzung ({K.EXP_RMSE_REPS} feste Datensätze bei n = {K.EXP_RMSE_NS[0]} und {K.EXP_RMSE_NS[1]}), Regel Eltern.")
+st.caption(f"{K.EXP_MULTI_SAMPLES} zufällige Diagramme mit 1 bis 4 zufälligen Fehlerschritten nacheinander (azyklisch; Schritte können sich aufheben); dazu die Streuung der Schätzung ({K.EXP_RMSE_REPS} feste Datensätze bei n = {K.EXP_RMSE_NS[0]} und {K.EXP_RMSE_NS[1]}), Regel Eltern.")
 if experiment_button("▶ Experiment 4 rechnen (etwa 5 Sekunden)", "exp4"):
     res4, rmse4 = _exp4()
     st.plotly_chart(build_multi_chart(res4, settings.tol), width="stretch", key="multi_chart")
@@ -258,7 +258,7 @@ st.markdown(
 | **Linear, Gauß'sches Rauschen** | Der Bias wird exakt aus der Kovarianz gerechnet; nichtlineare Wirkungen und die Schätzer der Stücke 6 und 7 (doppelt robust) sind nicht Teil dieses Stücks. | Welches Verfahren, gemessen woran? |
 | **Alle Größen beobachtet** | Eine verborgene Ursache wird nur als Stärketabelle behandelt (Experiment 2), nicht als gezeichneter Knoten. | Wann geht es gar nicht? |
 | **Fehler stammen aus Einzelschritten** | Experimente 3 und 4 verwenden Diagramme in kleinem Abstand zur Wahrheit; gelernte Diagramme (PC, LiNGAM) als Fehlerquelle sind nicht gebaut. | nicht gebaut |
-| **Die Daten prüfen das Diagramm, nicht den Bias** | Ein Diagramm, das nur wahre Unabhängigkeiten behauptet (die Markov-Klasse des wahren, dichtere Diagramme), wird nie verworfen und kann doch schädlich sein; viele harmlose Diagramme werden verworfen (Experiment 3). | Welches Verfahren, gemessen woran? |
+| **Die Daten prüfen das Diagramm, nicht den Bias** | Ein Diagramm, das nur wahre Unabhängigkeiten behauptet (die Markov-Klasse des wahren, dichtere Diagramme), wird nur im Rahmen der Fehlalarmrate verworfen und kann doch schädlich sein; viele harmlose Diagramme werden verworfen (Experiment 3). | Welches Verfahren, gemessen woran? |
 | **Eine Wirkung, eine Welt** | Das Ergebnis gilt für diese sechs Größen und ihre Koeffizienten; die Toleranz ist ein Maßstab des Nutzers, kein Naturgesetz. | nicht gebaut |
 """
 )

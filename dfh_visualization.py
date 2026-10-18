@@ -216,7 +216,7 @@ def build_multi_chart(res: dict, tol: float) -> go.Figure:
     colors = {"Eltern": K.COLOR_GOOD, "Nicht-Nachkommen": K.COLOR_CONTROL, "kleinste gültige": K.COLOR_TRUTH, "alle anderen": K.COLOR_NEUTRAL, "nichts": K.COLOR_BAD}
     for rule in K.RULES:
         fig.add_trace(go.Scatter(x=list(res["ks"]), y=[100 * sm[k][rule] for k in res["ks"]], mode="lines+markers", name=rule, line=dict(color=colors[rule], width=3)))
-    fig.update_xaxes(title="Zahl der zufälligen Fehler im Diagramm", dtick=1)
+    fig.update_xaxes(title="Zahl der zufälligen Fehlerschritte", dtick=1)
     fig.update_yaxes(title="Diagramme mit Bias innerhalb der Toleranz (%)", range=[-2, 104])
     return _fixed(fig, 360)
 
